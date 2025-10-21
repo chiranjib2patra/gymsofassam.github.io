@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Assam Gyms Directory</title>
+<meta name="description" content="Search gyms across Assam by district, location, contact number and more." />
+<style>
+  :root{
+    --bg:#f7f8fa;
+    --card:#ffffff;
+    --muted:#6b7280;
+    --accent:#0f62fe;
+    --accent-2:#ef4444;
+    --radius:10px;
+    --gap:12px;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color-scheme: light;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:#0b1220;line-height:1.45;padding:20px}
+  .container{max-width:1100px;margin:0 auto}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .brand{display:flex;gap:12px;align-items:center}
+  .badge{width:48px;height:48px;background:var(--accent);border-radius:12px;display:grid;place-items:center;color:white;font-weight:700}
+  h1{margin:0;font-size:20px}
+  p.lead{margin:0;color:var(--muted);font-size:14px}
+
+  /* search area */
+  .controls{display:grid;grid-template-columns: 1fr 220px 120px;gap:12px;margin-top:18px;margin-bottom:18px}
+  .controls .search{display:flex;gap:8px}
+  input[type="search"], select, input[type="file"]{
+    width:100%;padding:10px;border-radius:10px;border:1px solid #e6e9ef;background:white;
+  }
+  button{padding:10px 12px;border-radius:10px;border:0;background:var(--accent);color:white;font-weight:600;cursor:pointer}
+  .secondary{background:#111827;color:white}
+  .inline{display:flex;gap:8px;align-items:center}
+
+  /* results */
+  .meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}
+  .results-grid{display:grid;grid-template-columns: 1fr;gap:12px}
+  .card{background:var(--card);padding:12px;border-radius:12px;border:1px solid #eef2f7;display:flex;gap:12px;align-items:flex-start}
+  .card .info{flex:1}
+  .tag{font-size:12px;color:var(--muted);background:#f3f4f6;padding:6px 8px;border-radius:8px}
+  .phone{color:var(--accent-2);font-weight:700}
+  .small{font-size:13px;color:var(--muted)}
+  .actions{display:flex;gap:8px;margin-top:8px}
+
+  /* table */
+  .results-table{width:100%;border-collapse:collapse;background:white;border-radius:8px;overflow:hidden}
+  .results-table th, .results-table td{padding:10px;border-bottom:1px solid #f1f5f9;text-align:left;font-size:14px}
+  .results-table th{background:#fbfbfd;font-weight:700}
+
+  /* footer */
+  footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+
+  /* responsive */
+  @media(min-width:900px){
+    .results-grid{grid-template-columns: repeat(2,1fr)}
+    .controls{grid-template-columns: 1fr 300px 160px}
+  }
+  @media(max-width:599px){
+    .controls{grid-template-columns:1fr;gap:8px}
+    header{flex-direction:column;align-items:flex-start;gap:8px}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="brand">
+      <div class="badge">GA</div>
+      <div>
+        <h1>Assam Gyms Directory</h1>
+        <p class="lead">Find gyms by district, location, contact and more — community-driven directory.</p>
+      </div>
+    </div>
+    <div class="inline">
+      <button id="btnExport" title="Export visible results as CSV">Export CSV</button>
+      <label style="margin-left:8px;font-size:13px;color:var(--muted)">Import CSV</label>
+      <input id="fileInput" type="file" accept=".csv,application/json" style="margin-left:8px">
+    </div>
+  </header>
+
+  <!-- search + filters -->
+  <div class="controls" role="search" aria-label="Search gyms">
+    <div class="search">
+      <input id="q" type="search" placeholder="Search gyms, address or phone (e.g., 'Jorhat', 'Strength', '99999')" />
+    </div>
+
+    <div>
+      <select id="districtFilter" aria-label="Filter by district">
+        <option value="">All districts</option>
+      </select>
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <select id="sortBy" aria-label="Sort results">
+        <option value="name">Sort: Name</option>
+        <option value="district">Sort: District</option>
+      </select>
+      <button id="btnClear" class="secondary">Clear</button>
+    </div>
+  </div>
+
+  <div class="meta">
+    <div id="stats">Showing <span id="count">0</span> gyms</div>
+    <div class="small">Tip: import CSV to add large lists. Required fields: <code>name,district,phone,address</code> (optional: lat,lng)</div>
+  </div>
+
+  <!-- results list -->
+  <div id="resultsArea">
+    <div class="results-grid" id="cards"></div>
+
+    <hr style="margin:18px 0">
+
+    <div style="overflow:auto">
+      <table class="results-table" id="resultsTable" aria-label="Gyms table">
+        <thead>
+          <tr><th>Name</th><th>District</th><th>Address</th><th>Phone</th><th>Map</th></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>Built for Assam — edit or import gym data as CSV. — <span id="updated"></span></footer>
+</div>
+
+<script>
+/*
+  Client-only gyms directory
+  Data structure:
+  { id, name, district, address, phone, lat, lng, notes }
+*/
+
+/* SAMPLE DATA (replace or import CSV) */
+let gyms = [
+  {id:1, name:"Elite Fitness Jorhat", district:"Jorhat", address:"Near Malow Field, Jorhat", phone:"+919876543210", lat:26.7470, lng:94.2167, notes:"Open 5am-11pm"},
+  {id:2, name:"Assam Power Gym", district:"Guwahati", address:"GS Road, Guwahati", phone:"+919999111222", lat:26.1445, lng:91.7362, notes:"Personal training available"},
+  {id:3, name:"Silchar Strength Hub", district:"Cachar", address:"Zindabazar, Silchar", phone:"+919876112233", notes:"Group classes"},
+  {id:4, name:"Dibrugarh Iron Works", district:"Dibrugarh", address:"Near Dibrugarh Station", phone:"+919870998877"},
+  {id:5, name:"Tezpur Fitness Center", district:"Sonitpur", address:"City Center, Tezpur", phone:"+919871234567"},
+  {id:6, name:"Nagaon Body Studio", district:"Nagaon", address:"A.T. Road, Nagaon", phone:"+919868888777"},
+  {id:7, name:"Sivasagar Strength & Yoga", district:"Sivasagar", address:"Madhabdev Path, Sivasagar", phone:"+919855443322"},
+  {id:8, name:"Bongaigaon Fit Club", district:"Bongaigaon", address:"Bazaar Rd, Bongaigaon", phone:"+919900112233"},
+  {id:9, name:"Dhubri Fitness Arena", district:"Dhubri", address:"Main Rd, Dhubri", phone:"+919844556677"},
+  {id:10, name:"Goalpara Gym & Wellness", district:"Goalpara", address:"Market Area, Goalpara", phone:"+919833445566"}
+];
+
+let filtered = [...gyms]; // current filtered view
+
+/* --- Utilities --- */
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+function formatPhone(t){ return t ? t : '—'; }
+function googleMapLink(g){
+  if(g.lat && g.lng) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(g.lat+','+g.lng)}`;
+  const q = encodeURIComponent((g.address||g.name||''));
+  return `https://www.google.com/maps/search/?api=1&query=${q}`;
+}
+
+/* --- UI rendering --- */
+const cardsEl = document.getElementById('cards');
+const tableBody = document.getElementById('tableBody');
+const countEl = document.getElementById('count');
+const districtSelect = document.getElementById('districtFilter');
+const qInput = document.getElementById('q');
+const sortSelect = document.getElementById('sortBy');
+const updatedEl = document.getElementById('updated');
+
+function populateDistricts(){
+  const districts = Array.from(new Set(gyms.map(g => (g.district||'').trim()).filter(Boolean))).sort();
+  districtSelect.innerHTML = '<option value="">All districts</option>' + districts.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+}
+
+function render(){
+  // update stats
+  countEl.textContent = filtered.length;
+  updatedEl.textContent = new Date().toLocaleString();
+
+  // cards
+  cardsEl.innerHTML = '';
+  if(filtered.length === 0){
+    cardsEl.innerHTML = '<div style="padding:18px;background:#fff;border-radius:10px;color:var(--muted)">No gyms match your search. Try clearing filters or import data.</div>';
+  } else {
+    filtered.forEach(g=>{
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div style="width:6px;background:${g.lat && g.lng ? 'linear-gradient(180deg,var(--accent),#0b84ff)' : '#d1d5db'};border-radius:6px;height:84px"></div>
+        <div class="info">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:start">
+            <div>
+              <div style="font-weight:700">${escapeHtml(g.name)}</div>
+              <div class="small">${escapeHtml(g.address||'—')}</div>
+            </div>
+            <div style="text-align:right">
+              <div class="tag">${escapeHtml(g.district||'—')}</div>
+              <div style="margin-top:8px"><a class="phone" href="tel:${encodeURIComponent(g.phone||'')}">${escapeHtml(formatPhone(g.phone))}</a></div>
+            </div>
+          </div>
+          <div class="actions">
+            <a href="${googleMapLink(g)}" target="_blank" rel="noopener" class="small">View on map</a>
+            <a href="tel:${encodeURIComponent(g.phone||'')}" class="small">Call</a>
+            <button onclick="showNotes(${g.id})" class="small" style="background:#eef2ff;border:1px solid #e2e8f0;padding:6px 8px;border-radius:8px">Notes</button>
+          </div>
+        </div>
+      `;
+      cardsEl.appendChild(card);
+    });
+  }
+
+  // table
+  tableBody.innerHTML = filtered.map(g => `
+    <tr>
+      <td>${escapeHtml(g.name)}</td>
+      <td>${escapeHtml(g.district||'')}</td>
+      <td>${escapeHtml(g.address||'')}</td>
+      <td><a href="tel:${encodeURIComponent(g.phone||'')}">${escapeHtml(g.phone||'')}</a></td>
+      <td><a href="${googleMapLink(g)}" target="_blank">Map</a></td>
+    </tr>
+  `).join('');
+}
+
+/* --- Search & filter logic --- */
+function applyFilters(){
+  const q = (qInput.value||'').trim().toLowerCase();
+  const district = (districtSelect.value||'').trim().toLowerCase();
+  const sortBy = sortSelect.value || 'name';
+  filtered = gyms.filter(g=>{
+    // district filter
+    if(district && ((g.district||'').toLowerCase() !== district)) return false;
+    // text search
+    if(!q) return true;
+    const hay = ((g.name||'') + ' ' + (g.address||'') + ' ' + (g.phone||'') + ' ' + (g.notes||'')).toLowerCase();
+    return hay.indexOf(q) !== -1;
+  });
+
+  filtered.sort((a,b)=>{
+    if(sortBy === 'district'){
+      return (a.district||'').localeCompare(b.district||'') || (a.name||'').localeCompare(b.name||'');
+    }
+    return (a.name||'').localeCompare(b.name||'');
+  });
+
+  render();
+}
+
+/* --- import CSV/JSON --- */
+const fileInput = document.getElementById('fileInput');
+
+fileInput.addEventListener('change', e=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const text = reader.result;
+    // try JSON first
+    try {
+      const parsed = JSON.parse(text);
+      if(Array.isArray(parsed)){
+        // merge (avoid duplicate ids)
+        const nextId = Math.max(0, ...gyms.map(g=>g.id||0))+1;
+        parsed.forEach((p, idx)=> {
+          gyms.push({...p, id: (p.id|| (nextId+idx))});
+        });
+        populateDistricts();
+        applyFilters();
+        alert('Imported JSON ('+parsed.length+' records).');
+        return;
+      }
+    } catch(e){}
+    // fallback parse CSV (simple)
+    const rows = text.split(/\r?\n/).map(r=>r.trim()).filter(Boolean);
+    if(rows.length === 0) { alert('No rows found'); return; }
+    const header = rows[0].split(',').map(h=>h.trim().toLowerCase());
+    const out = [];
+    for(let i=1;i<rows.length;i++){
+      const cols = rows[i].split(',').map(c=>c.trim());
+      if(cols.length === 0) continue;
+      const obj = {};
+      header.forEach((h, j)=> obj[h] = (cols[j]!==undefined ? cols[j] : ''));
+      // basic required check
+      if(!obj.name || !obj.district) continue;
+      out.push({
+        id: Math.max(0, ...gyms.map(g=>g.id||0))+ out.length + 1,
+        name: obj.name,
+        district: obj.district,
+        address: obj.address || '',
+        phone: obj.phone || '',
+        lat: obj.lat ? parseFloat(obj.lat) : undefined,
+        lng: obj.lng ? parseFloat(obj.lng) : undefined,
+        notes: obj.notes || ''
+      });
+    }
+    gyms = gyms.concat(out);
+    populateDistricts();
+    applyFilters();
+    alert('Imported CSV ('+out.length+' records).');
+  };
+  reader.readAsText(f);
+  // clear input so same file can be selected again
+  fileInput.value = '';
+});
+
+/* --- Export CSV --- */
+function exportCSV(rows){
+  const cols = ['id','name','district','address','phone','lat','lng','notes'];
+  const csv = [cols.join(',')].concat(
+    rows.map(r => cols.map(c => {
+      const v = r[c] === undefined || r[c] === null ? '' : String(r[c]).replace(/"/g,'""');
+      return `"${v}"`;
+    }).join(','))
+  ).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'assam-gyms-export.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+document.getElementById('btnExport').addEventListener('click', ()=> exportCSV(filtered));
+
+/* --- small helpers --- */
+function showNotes(id){
+  const g = gyms.find(x => x.id === id);
+  if(!g) return alert('Not found');
+  alert((g.name || '') + '\\n\\n' + (g.notes || 'No notes') + '\\n\\n' + (g.address || '') + (g.phone ? '\\nPhone: '+g.phone : ''));
+}
+
+/* --- event bindings --- */
+qInput.addEventListener('input', () => { applyFilters(); });
+districtSelect.addEventListener('change', applyFilters);
+sortSelect.addEventListener('change', applyFilters);
+document.getElementById('btnClear').addEventListener('click', () => {
+  qInput.value = '';
+  districtSelect.value = '';
+  sortSelect.value = 'name';
+  filtered = [...gyms];
+  render();
+});
+
+/* init */
+populateDistricts();
+applyFilters();
+</script>
+</body>
+</html>
