@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Gyms of Assam — Train Hard. Stay Rooted.</title>
+<meta name="description" content="Gyms of Assam – community gym offering strength training, yoga, certified trainers, and flexible memberships." />
+<style>
+  :root{
+    --bg:#0f0f10;
+    --card:#111214;
+    --muted:#bfc5ca;
+    --accent:#e11d2f; /* red */
+    --accent-2:#f0c02b; /* jaapi/gold */
+    --glass: rgba(255,255,255,0.04);
+    --radius:14px;
+    --max-width:1140px;
+    --container-padding:20px;
+    --shadow: 0 8px 24px rgba(2,6,23,0.6);
+    --gap:18px;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color-scheme: dark;
+    color: #fff;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background: linear-gradient(180deg,#070708 0%, #0d0d0e 100%);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    line-height:1.45;
+    padding-bottom:80px; /* leave space for sticky CTA on mobile */
+  }
+
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;height:auto;display:block;border-radius:8px}
+
+  .container{
+    width:100%;
+    max-width:var(--max-width);
+    margin:0 auto;
+    padding: 0 var(--container-padding);
+  }
+
+  /* header */
+  header{
+    position:sticky;
+    top:0;
+    z-index:60;
+    backdrop-filter: blur(6px);
+    background: linear-gradient(180deg, rgba(7,7,7,0.35), rgba(7,7,7,0.08));
+    padding:12px 0;
+    border-bottom:1px solid rgba(255,255,255,0.03);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    justify-content:space-between;
+  }
+  .logo{
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  .brand-badge{
+    width:46px;height:46px;
+    background:var(--accent);
+    display:grid;
+    place-items:center;
+    border-radius:10px;
+    box-shadow: 0 6px 18px rgba(225,29,47,0.18);
+    font-weight:700;
+    font-size:18px;
+  }
+  .brand-name{
+    font-weight:700;font-size:18px;letter-spacing:0.2px;
+  }
+  nav.desktop {
+    display:flex;
+    gap:16px;
+    align-items:center;
+  }
+  nav.desktop a{color:var(--muted);padding:8px 10px;border-radius:8px}
+  nav.desktop a:hover{color:#fff;background:rgba(255,255,255,0.03)}
+  .cta{
+    background:linear-gradient(90deg,var(--accent),#fb3950);
+    padding:10px 14px;border-radius:12px;color:white;font-weight:600;
+    box-shadow: 0 8px 30px rgba(225,29,47,0.12);
+  }
+
+  /* Mobile hamburger */
+  .hamburger{display:none;background:transparent;border:0;color:var(--muted);font-size:20px}
+
+  /* HERO */
+  .hero{
+    min-height:80vh;
+    display:grid;
+    grid-template-columns: 1fr;
+    align-items:center;
+    gap:30px;
+    padding:34px 0 60px;
+  }
+  .hero-inner{display:grid;gap:20px}
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:18px;
+    align-items:center;
+  }
+  .hero-copy h1{
+    margin:0;
+    font-size:34px;
+    line-height:1.02;
+    letter-spacing:-0.6px;
+    color: #fff;
+  }
+  .tagline{color:var(--muted);margin-top:8px}
+  .hero-ctas{display:flex;gap:12px;margin-top:16px}
+  .btn{
+    padding:12px 16px;border-radius:12px;border:0;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent));color:white;box-shadow:0 8px 20px rgba(225,29,47,0.12)}
+  .trust-badges{display:flex;gap:12px;margin-top:12px;color:var(--muted);font-size:13px}
+
+  .hero-media{
+    height:320px;border-radius:18px;overflow:hidden;background:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:var(--shadow);
+  }
+  .hero-media img{width:100%;height:100%;object-fit:cover}
+
+  /* quick stats */
+  .stats-grid{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+  .stat{background:var(--glass);padding:12px;border-radius:12px;min-width:140px;flex:1;display:flex;flex-direction:column;gap:6px;text-align:center}
+  .stat h3{margin:0;font-size:20px}
+  .stat p{margin:0;color:var(--muted);font-size:13px}
+
+  /* sections */
+  section{padding:36px 0;border-top:1px solid rgba(255,255,255,0.02)}
+  h2{margin:0 0 12px;font-size:22px}
+  p.lead{color:var(--muted);margin:0 0 8px}
+
+  /* programs */
+  .programs-grid{display:grid;grid-template-columns: repeat(1,1fr);gap:12px;margin-top:18px}
+  .program-card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:14px;border-radius:12px;display:flex;gap:12px;align-items:center}
+  .program-card img{width:96px;height:72px;object-fit:cover;border-radius:10px}
+  .program-card h3{margin:0;font-size:16px}
+  .program-card p{margin:0;color:var(--muted);font-size:13px}
+
+  /* facilities gallery */
+  .gallery-grid{display:grid;grid-template-columns: repeat(2,1fr);gap:12px}
+  .gallery-grid img{height:140px;object-fit:cover;border-radius:10px}
+
+  /* trainers carousel (simple) */
+  .trainers{display:flex;gap:12px;overflow:hidden;padding:6px 0}
+  .trainer-card{min-width:220px;background:var(--card);padding:12px;border-radius:12px;flex:0 0 auto;box-shadow:0 8px 20px rgba(0,0,0,0.6)}
+  .trainer-photo{height:140px;border-radius:10px;overflow:hidden}
+  .trainer-photo img{width:100%;height:100%;object-fit:cover}
+  .trainer-info{padding-top:10px}
+  .badge{display:inline-block;background:rgba(255,255,255,0.04);padding:6px 8px;border-radius:8px;font-size:12px;color:var(--muted);margin-right:8px}
+
+  /* pricing */
+  .pricing-grid{display:grid;grid-template-columns: 1fr;gap:12px;margin-top:18px}
+  .plan{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:12px}
+  .plan.recommended{box-shadow:0 12px 36px rgba(240,192,43,0.08);border:1px solid rgba(240,192,43,0.08)}
+  .price{font-size:26px;font-weight:700;margin:8px 0}
+
+  /* testimonials */
+  .testimonials{display:grid;grid-template-columns:1fr;gap:12px}
+  .testimonial{background:var(--glass);padding:14px;border-radius:12px}
+
+  /* gallery/events */
+  .events-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+
+  /* faq */
+  .faq .q{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:12px;border-radius:10px;margin-bottom:8px}
+  .q button{width:100%;text-align:left;background:transparent;border:0;padding:0;color:var(--muted);font-weight:600}
+
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:1fr;gap:12px}
+  .contact-card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:16px;border-radius:12px}
+  .contact-form input,.contact-form textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff;margin-bottom:10px}
+  .contact-form button{padding:12px 16px;border-radius:10px;background:var(--accent);border:0;color:white;font-weight:700}
+
+  /* footer */
+  footer{padding:24px 0;color:var(--muted);font-size:14px;border-top:1px solid rgba(255,255,255,0.02)}
+  .footer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+  /* floating CTA */
+  .floating-cta{
+    position:fixed;right:20px;bottom:20px;z-index:80;
+  }
+  .floating-cta a{display:inline-flex;align-items:center;gap:10px;padding:12px 14px;border-radius:999px;background:linear-gradient(90deg,var(--accent),#ff6b6b);color:white;font-weight:700;box-shadow:0 12px 34px rgba(225,29,47,0.14)}
+  .chat-bubble{position:fixed;left:18px;bottom:20px;background:#14232b;border-radius:12px;padding:8px 10px;color:var(--muted);font-weight:700;z-index:80}
+
+  /* responsive */
+  @media(min-width:800px){
+    .hero-grid{grid-template-columns: 1fr 520px}
+    .programs-grid{grid-template-columns:repeat(3,1fr)}
+    .gallery-grid{grid-template-columns: repeat(3,1fr)}
+    .trainers{padding:12px 0}
+    .pricing-grid{grid-template-columns: repeat(3,1fr)}
+    .testimonials{grid-template-columns:repeat(3,1fr)}
+    .events-grid{grid-template-columns:repeat(6,1fr)}
+    nav.desktop{display:flex}
+    .hamburger{display:none}
+  }
+  @media(max-width:799px){
+    nav.desktop{display:none}
+    .hamburger{display:inline-block}
+    .hero{padding:20px 0}
+    .trainers{overflow-x:auto;padding:6px 0}
+    .trainers::-webkit-scrollbar{height:8px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav" role="navigation" aria-label="Main navigation">
+    <div class="logo">
+      <div class="brand-badge" aria-hidden="true">GA</div>
+      <div>
+        <div class="brand-name">Gyms of Assam</div>
+        <div style="font-size:12px;color:var(--muted)">Train Hard. Stay Rooted.</div>
+      </div>
+    </div>
+
+    <nav class="desktop" aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#programs">Programs</a>
+      <a href="#trainers">Trainers</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div style="display:flex;gap:12px;align-items:center">
+      <a class="cta" href="#pricing">Join Now</a>
+      <button class="hamburger" aria-label="Open menu" id="hambtn">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile menu (hidden by default) -->
+<div id="mobileMenu" style="display:none;position:fixed;inset:0;background:linear-gradient(180deg,rgba(2,2,2,0.96),rgba(2,2,2,0.96));z-index:200;padding:26px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="brand-badge">GA</div>
+      <div style="font-size:18px;font-weight:700">Gyms of Assam</div>
+    </div>
+    <button id="closeMobile" style="background:transparent;border:0;color:var(--muted);font-size:24px">✕</button>
+  </div>
+  <nav style="margin-top:24px;display:flex;flex-direction:column;gap:16px;">
+    <a href="#about" class="mobile-link">About</a>
+    <a href="#programs" class="mobile-link">Programs</a>
+    <a href="#trainers" class="mobile-link">Trainers</a>
+    <a href="#pricing" class="mobile-link">Pricing</a>
+    <a href="#contact" class="mobile-link">Contact</a>
+    <a href="#pricing" class="cta" style="width:fit-content;margin-top:8px">Join Now</a>
+  </nav>
+</div>
+
+<main>
+  <!-- HERO -->
+  <section id="hero" class="hero container">
+    <div class="hero-inner">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-copy">
+            <h1>Train Hard. Stay Rooted.</h1>
+            <p class="tagline">Assam’s community gym – strength training, yoga, and expert coaching for every level.</p>
+
+            <div class="hero-ctas">
+              <a href="#contact" class="btn primary">Join Free Trial</a>
+              <a href="#pricing" class="btn">View Plans</a>
+            </div>
+
+            <div class="trust-badges" aria-hidden="true">
+              <div style="display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14" stroke="white" stroke-opacity="0.2" stroke-width="1.5"/></svg><span>Certified Trainers</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="white" stroke-opacity="0.12"/></svg><span>24x7 Access</span></div>
+            </div>
+
+            <div class="stats-grid" style="margin-top:18px">
+              <div class="stat"><h3>10+</h3><p>Trainers</p></div>
+              <div class="stat"><h3>5000+</h3><p>Members</p></div>
+              <div class="stat"><h3>24x7</h3><p>Access</p></div>
+              <div class="stat"><h3>Modern</h3><p>Equipment</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="hero-media" aria-hidden="true">
+            <!-- Replace with a video or large image -->
+            <img src="assets/hero.jpg" alt="Gym action - people training" onerror="this.style.opacity='.6';this.alt='Placeholder hero image. Replace with assets/hero.jpg'">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="container">
+    <h2>About Gyms of Assam</h2>
+    <p class="lead">A community-first gym rooted in Assamese values — training that respects tradition and builds modern strength. Founded to bring accessible fitness, expert coaching, and group energy to our local community.</p>
+    <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-top:18px">
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <img src="assets/about-1.jpg" alt="Gym interior" style="flex:1;min-width:180px;height:140px;object-fit:cover;border-radius:12px" onerror="this.style.opacity='.6'">
+        <img src="assets/about-2.jpg" alt="Trainers" style="flex:1;min-width:180px;height:140px;object-fit:cover;border-radius:12px" onerror="this.style.opacity='.6'">
+      </div>
+    </div>
+  </section>
+
+  <!-- Programs -->
+  <section id="programs" class="container">
+    <h2>Programs & Classes</h2>
+    <p class="lead">Group classes and personalised plans for strength, flexibility, and endurance.</p>
+
+    <div class="programs-grid" aria-label="Programs">
+      <article class="program-card">
+        <img src="assets/strength.jpg" alt="Strength training">
+        <div>
+          <h3>Strength & Conditioning</h3>
+          <p>3x weekly program focused on compound lifts and progression.</p>
+        </div>
+      </article>
+
+      <article class="program-card">
+        <img src="assets/yoga.jpg" alt="Yoga class">
+        <div>
+          <h3>Yoga & Flexibility</h3>
+          <p>Gentle to intermediate classes focusing on mobility and breathwork.</p>
+        </div>
+      </article>
+
+      <article class="program-card">
+        <img src="assets/personal.jpg" alt="Personal training">
+        <div>
+          <h3>Personal Training</h3>
+          <p>1-on-1 coaching with certified trainers to reach your goals faster.</p>
+        </div>
+      </article>
+
+      <article class="program-card">
+        <img src="assets/functional.jpg" alt="Functional training">
+        <div>
+          <h3>Functional Training</h3>
+          <p>Movement-based workouts to improve daily strength and endurance.</p>
+        </div>
+      </article>
+
+      <article class="program-card">
+        <img src="assets/group.jpg" alt="Group classes">
+        <div>
+          <h3>Group Classes</h3>
+          <p>High-energy sessions with community support and coach guidance.</p>
+        </div>
+      </article>
+
+      <article class="program-card">
+        <img src="assets/zumba.jpg" alt="Zumba">
+        <div>
+          <h3>Zumba & Cardio</h3>
+          <p>Cardio-focused fun classes to burn calories and boost mood.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- facilities -->
+  <section id="facilities" class="container">
+    <h2>Facilities & Equipment</h2>
+    <p class="lead">Modern machines, free weights, locker rooms, showers, and safe, sanitized spaces.</p>
+    <div class="gallery-grid" style="margin-top:14px">
+      <img src="assets/equip-1.jpg" alt="Equipment 1">
+      <img src="assets/locker.jpg" alt="Lockers">
+      <img src="assets/showers.jpg" alt="Showers">
+      <img src="assets/cardio.jpg" alt="Cardio Zone">
+      <img src="assets/weights.jpg" alt="Weights">
+      <img src="assets/studio.jpg" alt="Studio space">
+    </div>
+  </section>
+
+  <!-- trainers -->
+  <section id="trainers" class="container">
+    <h2>Meet Our Trainers</h2>
+    <p class="lead">Certified coaches who design programs with safety and progression in mind.</p>
+
+    <div class="trainers" aria-live="polite">
+      <div class="trainer-card">
+        <div class="trainer-photo"><img src="assets/trainer-1.jpg" alt="Coach Anup - Strength coach"></div>
+        <div class="trainer-info">
+          <strong>Coach Anup</strong>
+          <div style="color:var(--muted);font-size:13px">Strength & Conditioning</div>
+          <div style="margin-top:8px"><span class="badge">ACE</span><span class="badge">CPR</span></div>
+        </div>
+      </div>
+
+      <div class="trainer-card">
+        <div class="trainer-photo"><img src="assets/trainer-2.jpg" alt="Coach Priya - Yoga"></div>
+        <div class="trainer-info">
+          <strong>Coach Priya</strong>
+          <div style="color:var(--muted);font-size:13px">Yoga & Mobility</div>
+          <div style="margin-top:8px"><span class="badge">Yoga Alliance</span></div>
+        </div>
+      </div>
+
+      <div class="trainer-card">
+        <div class="trainer-photo"><img src="assets/trainer-3.jpg" alt="Coach Rohit - PT"></div>
+        <div class="trainer-info">
+          <strong>Coach Rohit</strong>
+          <div style="color:var(--muted);font-size:13px">Personal Training</div>
+          <div style="margin-top:8px"><span class="badge">NASM</span></div>
+        </div>
+      </div>
+
+      <div class="trainer-card">
+        <div class="trainer-photo"><img src="assets/trainer-4.jpg" alt="Coach Mira - Functional"></div>
+        <div class="trainer-info">
+          <strong>Coach Mira</strong>
+          <div style="color:var(--muted);font-size:13px">Functional Training</div>
+          <div style="margin-top:8px"><span class="badge">CPR</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- pricing -->
+  <section id="pricing" class="container">
+    <h2>Membership Plans</h2>
+    <p class="lead">Flexible plans to suit occasional users and dedicated athletes. No lock-ins.</p>
+
+    <div class="pricing-grid">
+      <div class="plan">
+        <h3>Basic</h3>
+        <div class="price">₹999 / month</div>
+        <ul style="color:var(--muted);padding-left:18px">
+          <li>Gym access - daytime</li>
+          <li>Group classes (limited)</li>
+          <li>Locker access</li>
+        </ul>
+        <div style="margin-top:10px"><a class="btn primary" href="#contact">Join Basic</a></div>
+      </div>
+
+      <div class="plan recommended">
+        <h3>Pro</h3>
+        <div class="price">₹2,499 / month</div>
+        <ul style="color:var(--muted);padding-left:18px">
+          <li>24x7 gym access</li>
+          <li>Unlimited group classes</li>
+          <li>2 personal training sessions / month</li>
+        </ul>
+        <div style="margin-top:10px"><a class="btn primary" href="#contact">Choose Pro</a></div>
+      </div>
+
+      <div class="plan">
+        <h3>Elite</h3>
+        <div class="price">₹6,999 / year</div>
+        <ul style="color:var(--muted);padding-left:18px">
+          <li>All Pro features</li>
+          <li>Monthly PT check-ins</li>
+          <li>Priority bookings & discounts</li>
+        </ul>
+        <div style="margin-top:10px"><a class="btn primary" href="#contact">Go Elite</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- testimonials -->
+  <section id="testimonials" class="container">
+    <h2>Member Stories</h2>
+    <p class="lead">Real results from our local members.</p>
+
+    <div class="testimonials">
+      <div class="testimonial">
+        <strong>Ria — Lost 12kg</strong>
+        <p style="color:var(--muted)">\"The coaches helped me set realistic goals and I found the community so supportive.\"</p>
+      </div>
+      <div class="testimonial">
+        <strong>Vikram — Muscle gain</strong>
+        <p style="color:var(--muted)">\"Structured programming got me strength gains while avoiding injuries.\"</p>
+      </div>
+      <div class="testimonial">
+        <strong>Bonnie — Yoga progress</strong>
+        <p style="color:var(--muted)">\"The yoga classes helped my flexibility and reduced my back pain.\"</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- events / gallery -->
+  <section id="gallery" class="container">
+    <h2>Community & Events</h2>
+    <p class="lead">From cultural tie-ins to group runs — we celebrate fitness and community.</p>
+
+    <div class="events-grid" style="margin-top:12px">
+      <img src="assets/event-1.jpg" alt="Event 1" onerror="this.style.opacity='.6'">
+      <img src="assets/event-2.jpg" alt="Event 2" onerror="this.style.opacity='.6'">
+      <img src="assets/event-3.jpg" alt="Event 3" onerror="this.style.opacity='.6'">
+      <img src="assets/event-4.jpg" alt="Event 4" onerror="this.style.opacity='.6'">
+      <img src="assets/event-5.jpg" alt="Event 5" onerror="this.style.opacity='.6'">
+      <img src="assets/event-6.jpg" alt="Event 6" onerror="this.style.opacity='.6'">
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="container">
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <div class="q">
+        <button onclick="toggleFAQ(this)">Do you offer trial sessions?</button>
+        <div style="color:var(--muted);margin-top:8px">Yes — book a free trial via the contact form or call/WhatsApp us.</div>
+      </div>
+
+      <div class="q">
+        <button onclick="toggleFAQ(this)">What are the hours?</button>
+        <div style="color:var(--muted);margin-top:8px">We offer 24x7 access for Pro/Elite members. Basic hours: 6am — 10pm.</div>
+      </div>
+
+      <div class="q">
+        <button onclick="toggleFAQ(this)">Are trainers certified?</button>
+        <div style="color:var(--muted);margin-top:8px">Yes — our trainers hold recognized certifications (ACE, NASM, Yoga Alliance, CPR).</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- contact -->
+  <section id="contact" class="container">
+    <h2>Contact & Location</h2>
+    <p class="lead">Drop by or reach out — book a trial, ask about plans, or get a tour.</p>
+
+    <div class="contact-grid" style="margin-top:12px">
+      <div class="contact-card" style="padding:12px;">
+        <strong>Address</strong>
+        <p style="color:var(--muted);margin:6px 0">Near Malow Field, Jorhat, Assam</p>
+        <p style="margin:6px 0"><strong>Phone:</strong> <a href="tel:+916001266648">+91 60012 66648</a></p>
+        <p style="margin:6px 0"><strong>Email:</strong> <a href="mailto:projectsperks@gmail.com">projectsperks@gmail.com</a></p>
+
+        <div style="margin-top:12px">
+          <!-- Replace src with real Google Maps embed if available -->
+          <div style="width:100%;height:200px;background:linear-gradient(180deg,#0b0b0b,#0f0f11);border-radius:10px;display:grid;place-items:center;color:var(--muted)">
+            <iframe width="60%" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=450&amp;hl=en&amp;q=1600%20Amphitheatre%20Parkway,%20Mountain%20View,%20CA+(Google%20Plex)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <form class="contact-card contact-form" action="mailto:projectsperks@gmail.com" method="post" enctype="text/plain">
+        <label for="name" style="font-weight:600">Name</label>
+        <input id="name" name="name" required placeholder="Your name">
+        <label for="phone" style="font-weight:600">Phone</label>
+        <input id="phone" name="phone" required placeholder="Mobile number">
+        <label for="message" style="font-weight:600">Message</label>
+        <textarea id="message" name="message" rows="4" placeholder="How can we help?" required></textarea>
+        <button type="submit">Send message</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- Floating CTA and chat bubble -->
+<div class="floating-cta">
+  <a href="#contact" aria-label="Join Now">Join Now</a>
+</div>
+<div class="chat-bubble" role="button" aria-label="WhatsApp" onclick="location.href='https://wa.me/916001266648'">
+  Chat on WhatsApp
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <strong>Gyms of Assam</strong>
+        <div style="color:var(--muted);margin-top:8px">Train Hard. Stay Rooted.</div>
+      </div>
+      <div>
+        <strong>Quick Links</strong>
+        <div style="color:var(--muted);margin-top:8px">
+          <div><a href="#programs">Programs</a></div>
+          <div><a href="#pricing">Pricing</a></div>
+          <div><a href="#contact">Contact</a></div>
+        </div>
+      </div>
+      <div>
+        <strong>Follow</strong>
+        <div style="color:var(--muted);margin-top:8px">
+          <div><a href="#" aria-label="Instagram">Instagram</a></div>
+          <div><a href="#" aria-label="Facebook">Facebook</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;color:var(--muted);font-size:13px;text-align:center">
+      © <span id="year"></span> Gyms of Assam • Privacy • Terms
+    </div>
+  </div>
+</footer>
+
+<script>
+  // header mobile menu
+  const mobileBtn = document.getElementById('hambtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const closeMobile = document.getElementById('closeMobile');
+  mobileBtn && mobileBtn.addEventListener('click', ()=> mobileMenu.style.display='block');
+  closeMobile && closeMobile.addEventListener('click', ()=> mobileMenu.style.display='none');
+  document.querySelectorAll('.mobile-link').forEach(a=>a.addEventListener('click', ()=> mobileMenu.style.display='none'));
+
+  // FAQ toggle
+  function toggleFAQ(btn){
+    const parent = btn.parentElement;
+    const open = parent.classList.toggle('open');
+    const detail = parent.querySelector('div');
+    detail.style.display = open ? 'block' : 'none';
+  }
+  // initialize faq details hidden
+  document.querySelectorAll('.faq .q > div').forEach(d => { d.style.display='none'; });
+
+  // set year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // smooth scroll for anchors
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', function(e){
+      const href = this.getAttribute('href');
+      if(!href || href === '#') return;
+      const el = document.querySelector(href);
+      if(el){
+        e.preventDefault();
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+
+  // Very small trainer "carousel" auto-scroll for overflow container (desktop)
+  const trainers = document.querySelector('.trainers');
+  if(trainers && window.matchMedia('(min-width:800px)').matches){
+    let scrollDir = 1;
+    setInterval(()=>{
+      try{
+        if(trainers.scrollLeft + trainers.clientWidth >= trainers.scrollWidth - 10) scrollDir = -1;
+        if(trainers.scrollLeft <= 0) scrollDir = 1;
+        trainers.scrollBy({left: 220 * scrollDir, behavior:'smooth'});
+      }catch(e){}
+    },3500);
+  }
+</script>
+
+</body>
+</html>
